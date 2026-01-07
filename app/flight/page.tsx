@@ -1,4 +1,7 @@
 "use client";
+
+export const dynamic = "force-dynamic";
+
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -21,7 +24,6 @@ export default function FlightsPage() {
         const res = await axios.get("/api/flights/search", {
           params: { from, to, date },
         });
-
         setFlights(res.data.data || []);
       } catch (error) {
         console.error(error);
@@ -35,11 +37,8 @@ export default function FlightsPage() {
   }, [from, to, date]);
 
   if (loading) return <p className="p-6">Loading flights Data</p>;
+  if (!flights.length) return <p className="p-6">No flights found.</p>;
 
-  if (!flights.length) {
-    return <p className="p-6">No flights found.</p>;
-  }
-  
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-4">
       {flights.map((flight, i) => (
